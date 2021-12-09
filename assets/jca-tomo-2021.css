@@ -1,0 +1,378 @@
+/* ---------- GENERAL TAGS ---------- */
+
+body {
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+}
+.clear {
+    clear: both;
+}
+.jca-page-wrapper {
+    width: 100%;
+    margin: 0 auto;
+}
+.jca-page-width-wrapper {
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* ---------- GENERAL TAGS ---------- */
+
+
+
+
+
+
+
+
+
+/* ---------- CLASSES ----------- */
+
+.jca-tomo-hero {
+    display: flex;
+    text-align: center;
+    background-size: cover;
+    flex-direction: column;
+    align-items: center;
+    columns:1;
+    justify-content: center;
+}
+.jca-tomo-title {
+    font-family: 'Avenir Next';
+    font-weight: 900;
+    color:#fff;
+}
+.jca-tomo-hero > p {
+    color:#fff;
+    font-family: 'Avenir';
+    margin-top:0;
+}
+.jca-tomo-product-details {
+    display:flex;
+}
+.jca-tomo-shop-now-btn {
+    background-color:#fff;
+    font-family: 'Avenir';
+    text-align:center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width:100%;
+}
+.jca-tomo-shop-now-btn > a {
+    color:#000;
+    font-weight: 900;
+    text-decoration:none;
+}
+.jca-tomo-product-bullets-video {
+    display:flex;
+    overflow:hidden;
+}
+.jca-tomo-product-bullets {
+    background-color: #000;
+    color:#fff; 
+}
+.jca-tomo-product-bullets > ul {
+    text-align:center;
+    list-style: none;
+    font-family: 'Avenir';
+}
+.jca-tomo-bullet-title {
+    font-weight:900;
+}
+.jca-tomo-bullet-text {
+    font-weight: 400;
+}
+.jca-tomo-product-video {
+    background-color: #000;
+}
+.jca-tomo-accessory {
+    display:flex;
+    background-color:#fff;
+    font-family: 'Avenir';
+    color: #000;
+}
+.jca-tomo-accessory-btn {
+    background-color:#000;
+    font-family: 'Avenir';
+    font-weight:900;
+    width:100%;
+    text-align: center;
+    margin: 0 auto;
+}
+.jca-tomo-accessory-btn > a {
+    text-decoration: none;
+    color:#fff;
+}
+.jca-tomo-2021-dfgd {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size:cover;
+    color: #fff;
+    text-align: center;    
+    font-family: 'Avenir';
+}
+.jca-tomo-dfgd-btn {
+    background-color:#fff;
+    width:100%;
+    text-align: center;
+    margin: 0 auto;
+}
+.jca-tomo-dfgd-btn > a {
+    text-decoration: none;
+    color:#000;
+    font-weight:900;
+}
+
+/* ---------- CLASSES ----------- */
+
+
+
+
+
+
+
+/* MOBILE */ 
+@media screen and (min-width: 330px) and (max-width: 1100px ) {
+    .jca-page-wrapper {
+        max-width: 1100px;
+        padding: 0 60px 0 25px;
+    }
+    .jca-tomo-hero {
+        background-image: url('https://cdn.shopify.com/s/files/1/1416/9810/files/tomo-hero-mobile.jpg?v=1638485448');
+        min-height: 542px;
+    }
+    .jca-tomo-title {
+        font-size:22vw;
+        margin-bottom: -10px
+    }
+    .jca-tomo-hero > p {
+        font-size: 3.733vw;
+    }
+    .jca-tomo-product-details {
+        flex-direction: column;
+    }
+    .jca-tomo-shop-now-btn {
+        min-height: 70px;
+        max-width: 150px;
+    }
+    .jca-tomo-shop-now-btn > a {
+        font-size: 2.5vw;
+    }
+    .jca-tomo-product-bullets-video {
+        flex-direction: column;
+        justify-content: center;
+        min-height: 815px;
+    }
+    .jca-tomo-product-bullets {
+        flex-direction: column;
+        min-width:100%;
+    }
+    #jcaTomoMobileBullets {
+        display:flex;
+    }
+    #jcaTomoMobileBullets {
+        display:flex;
+    }
+    #jcaTomoDesktopBullets {
+        display:none;
+    }
+    .jca-tomo-product-bullets > ul {
+        padding: 30px 60px 0 60px;
+    }
+    .jca-tomo-product-bullets > ul > li {
+        float:none;
+        margin-bottom:30px;
+    }
+    .jca-tomo-product-bullets > ul > li > img {
+        width:55px;
+    }
+    .jca-tomo-product-video > img {
+        width:100%;
+    }
+    .jca-tomo-accessory {
+        flex-direction: column;
+        justify-content:center;
+        flex-wrap: nowrap;
+        padding-top: 50px;
+        padding-bottom:50px;
+        padding-left:25px;
+        padding-right:25px;
+        align-items: center;
+        align-content: center;
+    }
+    .jca-tomo-accessory-left {
+        width:100%;
+        padding-left:35px;
+    }
+    .jca-tomo-accessory-left > img {
+        width:100%;
+        margin-bottom:20px;
+    }
+    .jca-tomo-accessory-right {
+        width:100%;
+    }
+    .jca-tomo-accessory-title {
+        font-weight:900;
+        font-size: 8vw;
+        text-align:center;
+    }
+    .jca-tomo-accessory-text {
+        font-size:3.73vw;
+        text-align:center;
+        margin-bottom:20px;
+    }
+    .jca-tomo-accessory-btn {
+        max-width: 165px;
+        margin-bottom:30px;
+        height:40px;
+    }
+    .jca-tomo-accessory-btn > a {
+        font-size: 1em;
+        line-height: 40px;
+    }
+    .jca-tomo-2021-dfgd {
+        background-image: url( 'https://cdn.shopify.com/s/files/1/1416/9810/files/tomo-2021-dfgd-bg-mobile.jpg' );
+        padding: 60px 25px 60px 25px;
+    }
+    .jca-tomo-2021-dfgd h5 {
+        font-size: 1.69em;
+        margin-top:0;
+        margin-bottom:20px;
+        font-weight:900;
+    }
+    .jca-tomo-2021-dfgd p {
+        font-size: 1em;
+        margin-bottom:28px;
+        line-height:normal;
+        font-weight:500;
+    }
+    .jca-tomo-dfgd-btn {
+        max-width: 165px;
+        height: 40px;
+    }
+    .jca-tomo-dfgd-btn > a {
+        font-size:1em;
+        line-height: 40px;
+    }
+}
+
+
+@media screen and (min-width: 1101px) {
+    .jca-tomo-hero {
+        background-image: url('https://cdn.shopify.com/s/files/1/1416/9810/files/tomo-hero-desktop.jpg?v=1638485448');
+        min-height: 955px;
+    }
+    .jca-tomo-title {
+        font-size:10.573vw;
+    }
+    .jca-tomo-hero > p {
+        font-size: 1.823vw;
+    }
+    .jca-tomo-shop-now-btn {
+        min-height:75px;
+        max-width: 256px;
+    }
+    .jca-tomo-shop-now-btn > a {
+        font-size: 1.8vw;
+    }
+    .jca-tomo-product-bullets-video {
+        flex-direction: row;
+        columns: 2;
+        min-height:540px;
+    }
+    #jcaTomoMobileBullets {
+        display:none;
+    }
+    #jcaTomoDesktopBullets {
+        display:flex;
+    }
+    .jca-tomo-product-bullets {
+        flex-direction: row;
+        columns:3;
+        min-width: 50%;
+    }
+    .jca-tomo-product-bullets > ul {
+        padding: 70px 50px;
+        margin:0;
+        flex-direction: row;
+        display: flex;
+        columns: 3;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        font-size: 0.85vw;
+    }
+    .jca-tomo-product-bullets > ul > li {
+        width:30%;
+    }
+    .jca-tomo-product-bullets > ul > li > img {
+        width: 72px;
+    }
+    .jca-tomo-product-video > img {
+        min-height: 540px;
+    }
+    .jca-tomo-accessory {
+        flex-direction: row;
+        justify-content:center;
+        flex-wrap: wrap;
+        columns:2;
+    }
+    .jca-tomo-accessory-left {
+        width:30%;
+        padding-left:190px;
+        padding-top:115px;
+    }
+    .jca-tomo-accessory-left > img {
+        width:100%;
+    }
+    .jca-tomo-accessory-right {
+        width:40%;
+        padding-left:125px;
+        padding-top:190px;
+        padding-bottom:190px;
+    }
+    .jca-tomo-accessory-title {
+        font-weight:900;
+        font-size: 3.5vw;
+        text-align: left;
+    }
+    .jca-tomo-accessory-text {
+        font-size:1.56vw;
+        text-align: left;
+        margin-bottom:30px;
+    }
+    .jca-tomo-accessory-btn {
+        max-width: 265px;
+        margin-bottom:30px;
+        height:70px;
+    }
+    .jca-tomo-accessory-btn > a {
+        line-height:70px;
+        font-size: 2em;
+    }
+    .jca-tomo-2021-dfgd {
+        background-image: url( 'https://cdn.shopify.com/s/files/1/1416/9810/files/tomo-2021-dfgd-bg-desktop.jpg?v=1638920031' );
+        padding:170px 100px 170px 100px;
+    }
+    .jca-tomo-2021-dfgd h5 {
+        font-size: 4em !important;
+        margin-top:0;
+        margin-bottom:25px;
+        font-weight:900 !important;
+    }
+    .jca-tomo-2021-dfgd p {
+        font-size: 1.65em;
+        margin-bottom:50px;
+        line-height:normal;
+        padding: 0 5% 0 5%;
+    }
+    .jca-tomo-dfgd-btn {
+        max-width: 265px;
+        height: 70px;
+    }
+    .jca-tomo-dfgd-btn > a {
+        font-size:2em;
+        line-height: 70px;
+    }
+}

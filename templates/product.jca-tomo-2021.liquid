@@ -1,0 +1,625 @@
+<!-- /templates/product.liquid -->
+
+{{ 'jca-tomo-2021.css' | asset_url | script_tag }}
+
+<style>
+    {% if product.available %}
+    {% else %}
+        button#AddToCart {
+            background: transparent !important;
+            border: 2px solid #15bef0;
+            color: #15bef0 !important;
+            text-transform: uppercase !important;
+        }
+        @media screen and (max-width: 768px) {
+            button#AddToCart {
+                margin: 0 auto;
+                width: 100%;
+            }
+        }
+    {% endif %}
+</style>
+
+{% assign about = product.metafields.about %}
+{% assign key = 'lifestyle1' %}
+  
+{% if product.metafields.custom_fields["product_feature_image_url"] != blank %}
+    <div class="product-header" style="position: relative; background-image:linear-gradient( to top ,rgba(0,0,0,0.3), rgba(0,0,0,0.5)),url({{ product.metafields.custom_fields["product_feature_image_url"] }});"></div>
+{% else %}
+    <div class="product-header" style="position: relative; background-image:linear-gradient( to top ,rgba(0,0,0,0.3), rgba(0,0,0,0.5)),url({{ about.lifestyle1 }});"></div>
+{% endif %}
+
+{% section 'jca-tomo-hero-2021' %}
+
+<div class="product-container scrollto" id="buy">
+
+    {% comment %}
+        Rich snippets (itemscope, itemtype, etc.) for products are a theme requirement,
+        and allow search engines to easily understand what the content is.
+    
+        For more information on these Scheme.org tags, visit:
+            - http://schema.org/docs/gs.html
+    {% endcomment %}
+  
+    <div itemscope itemtype="http://schema.org/Product">
+        {% include 'product-schema' %}
+  
+        {% comment %}
+            Get first variant, or deep linked one
+        {% endcomment %}
+      
+        {% assign current_variant = product.selected_or_first_available_variant %}
+
+        <div class="grid product-single">
+            <div class="grid__item large--one-half text-center" id="sticky-container">
+
+                {% comment %}
+                    Magic Zoom Start
+                {% endcomment %}
+          
+                <div class="product-thumbs-box">{% include 'magiczoomplus' %}</div>
+                    {% comment %}
+                        Magic Zoom End
+                    {% endcomment %}
+                </div>
+  
+                <div class="grid__item large--one-half product-info-container">
+                    <div class="product-variant-container" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                        <meta itemprop="priceCurrency" content="{{ shop.currency }}">
+
+                        <h1 class="product-title--hr">{{ product.title }}</h1>
+            
+                        <div class="price-review-box">
+                            <span class="stamped-product-reviews-badge stamped-main-badge" data-id="{{ product.id }}" style="display: block;">
+                                {{ product.metafields.stamped.badge }}
+                            </span>
+  
+                            <div>
+                                <span class="visually-hidden">
+                                    {{ 'products.general.regular_price' | t }}
+                                </span>
+
+                                <span id="ProductPrice" class="h2" itemprop="price" content="{{ current_variant.price | divided_by: 100 }}">
+                                    {{ current_variant.price | money }}
+                                </span>
+  
+                                {% if product.compare_at_price_max > product.price %}
+                                    <span class="visually-hidden">
+                                        {{ 'products.general.sale_price' | t }}
+                                    </span>
+
+                                    <p id="ComparePrice">
+                                        {{ 'products.product.compare_at' | t }} {{ current_variant.compare_at_price | money }}
+                                    </p>
+                                {% endif %}
+                            </div>
+  
+                            {% if product.price >= 4500 %}
+                                <span class="shipsfree">Your order ships free! (U.S. standard ground only)</span>
+                            {% else %}
+                                <span class="shipsfree">Orders over $45 ship free! (U.S. standard ground only)</span>
+                            {% endif %}
+                        </div>
+  
+                        <link itemprop="availability" href="http://schema.org/{% if product.available %}InStock{% else %}OutOfStock{% endif %}">
+
+                        {% comment %}
+                            ID addToCartForm is a selector for the ajax cart plugin
+                        {% endcomment %}
+
+                        {% assign measurements = product.metafields.measurements %}
+                        {% assign key = 'Size' %}
+  
+                        <p style="margin: 0;" class="product-size">
+                            {{ measurements.Size }}
+                        </p>
+  
+                        {% form 'product', product, id: "AddToCartForm", class: "form-vertical" %}
+                            <!--<form action="/cart/add" method="post" enctype="multipart/form-data" id="" class="">-->
+  
+                            {% comment %}
+                                Add product variants as a dropdown.
+                                    - By default, each variant (or combination of variants) will display as its own <option>
+                                    - To separate these into multiple steps, which we suggest, use option_selection.js (see below)
+                    
+                                You can leverage jQuery to add a callback on page load and each time the select element changes:
+                                    - Include option_selection.js (as seen at the bottom of this file)
+                                    - This allows you to use JavaScript anytime the variant dropdown changes
+                                    - This also separates out your variant options (ie. size, color, etc.) to separate select elements
+                    
+                                For more information on products with multiple options, visit:
+                                    - http://docs.shopify.com/support/your-website/themes/can-i-make-my-theme-use-products-with-multiple-options#update-product-liquid
+                            {% endcomment %}
+                            
+                            <select name="id" id="productSelect" class="product-single__variants">
+                                {% for variant in product.variants %}
+                                    <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} data-sku="{{ variant.sku }}" value="{{ variant.id }}">
+                                        {{ variant.title }} - {{ variant.price | money_with_currency }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+            
+                            <div id="bundle"></div>
+
+                            {% if product.available and product.variants.size > 1 %}
+                                {% for option in product.options %}
+                                    {% include 'swatch' with option %}
+                                {% endfor %}
+                            {% endif %}
+  
+  
+                            {% if product.handle contains "lab-item" %}
+                                {% assign lab = product.metafields.lab %}
+                                {% assign key = 'ship-date' %}
+                                {% assign key = 'ship-date-2' %}
+  
+                                <div class="cart-button-container">
+                                    <div class="how-many">
+                                        <label for="Quantity" class="quantity-selector"></label>
+                                        <input type="number" id="Quantity" name="quantity" value="1" min="1" class="quantity-selector">
+                                    </div>
+
+                                    <button style="max-height: 60px; min-height: 60px; padding: 5px 15px;" type="submit" name="add" id="AddToCart" class="btn">
+                                        <span>Pre-Order</span>
+
+                                        <div class="ship-date">
+                                            {% capture shipDate %}
+                                                <span class="shipdate1" style="display: none;">{{ lab.ship-date }}</span>
+                                                <span class="shipdate2" style="display: none;">{{ lab.ship-date-2 }}</span>
+                                            {% endcapture %}
+                                        
+                                            {{ shipDate }}
+                                        </div>
+                                    </button>
+                                </div>
+                            {% else %}
+                                <div class="cart-button-container">
+                                    {% if product.available %}
+                                        <div class="how-many">
+                                            <label for="Quantity" class="quantity-selector"></label>
+                                            <input type="number" id="Quantity" name="quantity" value="1" min="1" class="quantity-selector">
+                                        </div>
+                                    {% endif %}
+                                    <!-- 
+                                        <button type="submit" name="add" id="AddToCart" class="btn">
+                                            <span id="AddToCartText">{{ 'products.product.add_to_cart' | t }}</span>
+                                        </button> 
+                                    -->
+                                    {% include 'cart-buttons' %}
+                            {% endif %}
+                        {% endform %}
+                        <!--</form>-->
+  
+                        {% if product.tags contains 'local' %}
+                            {% if product.available %}
+                            {% else %}
+                            <div style="padding: 15px 15px 0; margin: 0 auto 15px; background: #eee;">
+                                <h6 class="center">Get notified when this is back in stock</h6>
+
+                                <div id="wufoo-mc4azfb1xi7xyw"></div>
+
+                                <script type="text/javascript">
+                                    var mc4azfb1xi7xyw;(function(d, t) {
+                                        var s = d.createElement(t), options = {
+                                            'userName':'miir',
+                                            'formHash':'mc4azfb1xi7xyw',
+                                            'autoResize':true,
+                                            'height':'287',
+                                            'async':true,
+                                            'host':'wufoo.com',
+                                            'header':'show',
+                                            'ssl':true
+                                        };
+                                        s.src = ('https:' == d.location.protocol ? 'https://' : 'http://') + 'www.wufoo.com/scripts/embed/form.js';
+                                        s.onload = s.onreadystatechange = function() {
+                                            var rs = this.readyState; 
+
+                                            if (rs) if (rs != 'complete') if (rs != 'loaded') return;
+                                            try { 
+                                                mc4azfb1xi7xyw = new WufooForm();
+                                                mc4azfb1xi7xyw.initialize(options);
+                                                mc4azfb1xi7xyw.display(); 
+                                            } 
+                                            catch (e) {}
+                                        };
+                                        var scr = d.getElementsByTagName(t)[0], 
+                                        par = scr.parentNode; par.insertBefore(s, scr);
+                                    }) (document, 'script');
+                                </script>
+                            </div>
+                            {% endif %}
+                        {% endif %}
+              
+                        {% if product.handle contains 'california-relief-camp-cup' %}
+                            {% if product.available %}
+                            {% else %}
+                                <div style="padding: 15px 15px 0; margin: 0 auto 15px; background: #eee;">
+                                    <h6 class="center">Get notified when this is back in stock</h6>
+
+                                    <div id="wufoo-m1c3yaor193bgno"></div>
+
+                                    <script type="text/javascript">
+                                        var m1c3yaor193bgno;(function(d, t) {
+                                            var s = d.createElement(t), options = {
+                                                'userName':'miir',
+                                                'formHash':'m1c3yaor193bgno',
+                                                'autoResize':true,
+                                                'height':'287',
+                                                'async':true,
+                                                'host':'wufoo.com',
+                                                'header':'show',
+                                                'ssl':true
+                                            };
+                                            s.src = ('https:' == d.location.protocol ? 'https://' : 'http://') + 'www.wufoo.com/scripts/embed/form.js';
+                                            s.onload = s.onreadystatechange = function() {
+                                                var rs = this.readyState; if (rs) if (rs != 'complete') if (rs != 'loaded') return;
+                                                try { 
+                                                    m1c3yaor193bgno = new WufooForm();m1c3yaor193bgno.initialize(options);m1c3yaor193bgno.display(); 
+                                                } catch (e) {}
+                                            };
+                                            var scr = d.getElementsByTagName(t)[0], par = scr.parentNode; par.insertBefore(s, scr);
+                                        })(document, 'script');
+                                    </script>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if product.handle contains "copper" %}
+                            {% if product.available %}
+                            {% else %}
+                                <div style="padding: 15px 15px 0; margin: 0 auto 15px; background: #eee;">
+                                    <h6 class="center">Get notified when this is back in stock</h6>
+
+                                    <div id="wufoo-m1j4ok1307601dp"></div>
+
+                                    <script type="text/javascript">
+                                        var m1j4ok1307601dp;(function(d, t) {
+                                            var s = d.createElement(t), options = {
+                                            'userName':'miir',
+                                            'formHash':'m1j4ok1307601dp',
+                                            'autoResize':true,
+                                            'height':'305',
+                                            'async':true,
+                                            'host':'wufoo.com',
+                                            'header':'show',
+                                            'ssl':true};
+                                            s.src = ('https:' == d.location.protocol ? 'https://' : 'http://') + 'www.wufoo.com/scripts/embed/form.js';
+                                            s.onload = s.onreadystatechange = function() {
+                                            var rs = this.readyState; if (rs) if (rs != 'complete') if (rs != 'loaded') return;
+                                            try { m1j4ok1307601dp = new WufooForm();m1j4ok1307601dp.initialize(options);m1j4ok1307601dp.display(); } catch (e) {}};
+                                            var scr = d.getElementsByTagName(t)[0], par = scr.parentNode; par.insertBefore(s, scr);
+                                        })(document, 'script');
+                                    </script>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                    <a id="reviews" class="returns-link" style="width: 100%;" href="#">
+                        <div class="shipping">
+                            {% section 'shipping-message' %}
+
+                            <h2 class="read-reviews">Read & Write Reviews</h2>
+                        </div>
+                    </a>
+            
+                    <a id="shipping" class="returns-link" style="width: 100%;" href="#">
+                        <div class="shipping">
+                            <p class="shipping-link">Shipping & Returns ›</p>
+                        </div>
+                    </a>
+            
+                    {% if product.handle contains "coolest-dad-camp-cup" %}
+                                <style>
+                                    .product-lifestyle {display: none;}
+                                    .dont-miss-out {
+                                        text-align: left;
+                                        margin: 5px 0 15px 0;
+                                        max-width: 300px;
+                                    }
+                                    @media screen and (max-width: 760px) {
+                                        .dont-miss-out {
+                                            margin: 0 auto;
+                                        }
+                                        .arrow-button {justify-content: center;}
+                                        .dont-miss-out h4,
+                                        .dont-miss-out p,
+                                        .dont-miss-out a {text-align: center !important;}
+                                    }
+                                </style>
+                            <div>
+                        </div>
+        
+                        <div class="dont-miss-out" style="display: none;">
+                            <h4>Don't miss out next time!</h4>
+                            
+                            <p style="margin: 5px 0;">Sign up for our newsletter to be the first to know about new products.</p>
+                            <a class="arrow-button" href="/pages/advocates">Join Newsletter</a>
+                        </div>
+                    {% endif %}
+                </div>
+  
+            </div>
+        </div>
+    </div>
+    
+    {% if product.handle contains "wine" %}
+        {% include 'wine-features' %}
+  
+        <div class="wrapper" style="margin-top: 30px;margin-bottom:30px">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/3PP4go8svKY?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+    {% endif %}
+
+    {% if product.handle contains "california-relief" %}
+        <div class="wrapper" style="margin: 30px auto;">
+            <h2 style="text-align: center;">About RAKlife</h2>
+
+            <p>RAKlife, short for Random Acts of Kindness, is a non-profit based in Ventura, CA who is providing relief to individuals and families most affected by the recent devastating Thomas Fires and mudslides in Montecito. Their direct financial assistance is providing basic needs including food, clothing, furniture and housing to help the victims begin to rebuild their lives.</p>
+            <p style="text-align: center;"><a class="blue-button" href="http://www.raklife.org/help-ca" target="_blank" rel="noopener noreferrer" style="text-decoration-line: none; text-transform: capitalize;">Donate directly to RAKlife here</a></p>
+            <p style="text-align: center;"><img src="//cdn.shopify.com/s/files/1/1416/9810/files/RAKlife_logo_final_compact.jpg?v=1515796563" alt="RAKlife" /></p>
+    
+        </div>
+    {% endif %}
+  
+    {% if product.handle contains "draper" %}
+        <div class="about-matt">
+            <div class="wrapper space-around">
+                <div class="white" style="height: 100vh;">
+                    <h2 class="fadeUp">About Matt Draper</h2>
+
+                    <p class="fadeUp">
+                        Internationally acclaimed fine art photographer Matt Draper uses his imagery
+                        to foster love for the ocean, by replacing fear with fascination.
+            
+                        Draper travels the oceans of the world to bring his creative vision
+                        into existence. He spends countless hours in the water, learning to
+                        better understand each individual species he interacts with.
+                        By meticulously studying and patiently moving through each untamed
+                        environment, Draper's photography reveals distinct characteristics
+                        and hidden intuitive behaviours. Self-taught, Draper prides himself
+                        on only using natural light. This, combined with his freediving
+                        capabilities, makes for minimal disturbance when observing marine life.
+                    </p>
+                </div>
+            <div>
+        </div>
+    </div>
+</div>
+
+      
+<div class="draper-bg-3 flex-space-around draper-collection-shop link" style="background:#000 url(//cdn.shopify.com/s/files/1/1416/9810/files/draper-box-collection.jpg);flex-direction: column;">
+    <a href="https://www.miir.com/collections/matt-draper" class="button">View Collection</a>
+</div>
+{% endif %}
+  
+<div class="wrapper">
+    {% include 'local-series-about' %}
+</div>
+
+<div class="scrollto" id="features">
+    {% include 'product-copy' %}
+</div>
+    
+<div class="big-wrapper">
+    <div data-app="eastsideco_cartOffers" data-position="product"></div>
+</div>
+  
+{% comment %}
+
+    To take advantage of a callback on the select dropdown, add option_selection.js
+    and customize the JS in timber.productPage as needed.
+  
+    Currently, timber.productPage does the following:
+        - Hides your <select> tag from above
+        - Breaks out the product variants into separate product options, if more than one exists
+        - Generates a <select> tag for each product option
+        - Enables/disables elements based on variant availability
+  
+    Callback notes:
+        - Keep the callback available to the global scope (window.selectCallback) so that advanced
+            addons can override it.
+            * E.g. multiple currencies http://docs.shopify.com/manual/configuration/store-customization/currencies-and-translations/currencies/how-to-toggle-between-two-currencies
+
+{% endcomment %}
+
+{{ 'option_selection.js' | shopify_asset_url | script_tag }}
+
+<script>
+    var selectCallback = function(variant, selector) {
+        // BEGIN SWATCHES
+        console.log("selectCallback");
+        console.log("variant-->",variant);
+        
+        if (variant) {
+            var form = jQuery('#' + selector.domIdPrefix).closest('form');
+            for (var i=0,length=variant.options.length; i<length; i++) {
+                var radioButton = form.find('.swatch[data-option-index="' + i + '"] :radio[value="' + variant.options[i] +'"]');
+
+                if (radioButton.size()) {
+                    console.log("new product.liquid!");
+                    radioButton.get(0).checked = true;
+                }
+            }
+        }
+        // END SWATCHES
+        timber.productPage({
+            money_format: "{{ shop.money_format }}",
+            variant: variant,
+            selector: selector
+        });
+    };
+  
+    jQuery(function($) {
+        new Shopify.OptionSelectors('productSelect', {
+            product: {{ product | json }},
+            onVariantSelected: selectCallback,
+            enableHistoryState: true
+        });
+  
+        // Add label if only one product option and it isn't 'Title'. Could be 'Size'.
+        {% if product.options.size == 1 and product.options.first != 'Title' %}
+            $('.selector-wrapper:eq(0)').prepend('<label for="productSelect-option-0">{{ product.options.first | escape }}</label>');
+        {% endif %}
+  
+        // Hide selectors if we only have 1 variant and its title contains 'Default'.
+        {% if product.variants.size == 1 and product.variants.first.title contains 'Default' %}
+            $('.selector-wrapper').hide();
+        {% endif %}
+    });
+</script>
+
+<script src="//cdn.jsdelivr.net/stickynavbar.js/1.3.2/jquery.stickyNavbar.min.js"></script>
+    
+<script>
+      //sticky
+      jQuery(function ($) {
+        $('.product-nav').stickyNavbar({
+          activeClass: "active",          // Class to be added to highlight nav elements
+          sectionSelector: "scrollto",    // Class of the section that is interconnected with nav links
+          animDuration: 1000,             // Duration of jQuery animation
+          startAt: 80,
+          easing: "linear",               // Easing type if jqueryEffects = true, use jQuery Easing plugin to extend easing types - gsgd.co.uk/sandbox/jquery/easing
+          animateCSS: true,               // AnimateCSS effect on/off
+          animateCSSRepeat: false,        // Repeat animation everytime user scrolls
+          cssAnimation: "",       // AnimateCSS class that will be added to selector
+          jqueryEffects: false,           // jQuery animation on/off
+          jqueryAnim: "fadeIn",         // jQuery animation type: fadeIn, show or slideDown
+          selector: "a",                  // Selector to which activeClass will be added, either "a" or "li"
+          mobile: true,                   // If false nav will not stick under 480px width of window
+          mobileWidth: 480,               // The viewport width (without scrollbar) under which stickyNavbar will not be applied (due usability on mobile devices)
+          zindex: 9999,                   // The zindex value to apply to the element: default 9999, other option is "auto"
+          stickyModeClass: "sticky-nav",  // Class that will be applied to 'this' in sticky mode
+          unstickyModeClass: "unsticky"   // Class that will be applied to 'this' in non-sticky mode
+        });
+      });
+  
+</script>
+
+{% if product.handle contains "draper" %}
+    <script>
+        $( document ).ready(function() {
+            if ({{ total }} > 0) {
+                $(".shipdate1").show();
+            } else {
+                $(".shipdate2").show();
+            }
+        });
+    </script>
+{% endif %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/jquery.slick/1.5.9/slick.min.js"></script>
+
+{{ 'ProductPageScripts.js' | asset_url | script_tag }}
+{{ 'productImgSlider.js' | asset_url | script_tag }}
+  
+  
+  
+<script>
+    // var _etmc= [];
+    //scroll to
+    $('a[href^="#"]').on('click', function(event) {
+        var target = $(this.getAttribute('href'));
+        if( target.length ) {
+            event.preventDefault();
+            $('html, body').stop().animate({
+                scrollTop: target.offset().top - 105
+            }, 1000);
+        }
+    });
+  
+    jQuery(document).ready(function(){
+        if (jQuery(window).width() > 768) {
+            $("#sticky-container").stick_in_parent({
+                offset_top: 285
+            });
+        }
+    });
+  
+    jQuery(window).resize(function () {
+        if (jQuery(window).width() > 768) {
+            $("#sticky-container").stick_in_parent({
+                offset_top: 285
+            });
+        }
+    });
+
+     // _etmc.push(["setOrgId", "100012079"]);
+    //  _etmc.push(["trackPageView", { "item" : "{{ product.title }}" }]);
+  
+  /*
+      _etmc.push(["updateItem",
+        {
+          "item_type": "{{ product.type }}",
+          "item": "{{ product.variant.sku }}",
+          "name": "{{ product.variant.sku }}",
+          "url": "{{ product.url }}",
+          "unique_id": "{{ product.id }}",
+          "available": "{{ product.available }}",
+          "image_url": "{{ product.featured_url }}",
+          "sale_price": "{{ product.compare_at_price_varies }}",
+          "price": "{{ product.price }}"
+        }
+      ]);
+      */
+  
+</script>
+  
+    {% include 'swatch-fix' %}
+  
+    <!--Klaviyo product script begin-->
+    <script text="text/javascript">
+      {% assign option_index = 0 %}
+      {% for option in product.options %}
+      {% if option == 'Color' %}
+      {% assign option_index = forloop.index0 %}
+      {% endif %}
+      {% endfor %}
+  
+      {% capture 'color_data' %}
+      {% for variant in product.variants %}
+      {
+        {{ variant.sku | json }}: {{variant.options[option_index] | json}}
+      }
+      {% unless forloop.last %},{% endunless %}
+      {% endfor %}
+      {% endcapture %}
+      var colors = [ {{ color_data }} ];
+      console.log({colors});
+      var _learnq = _learnq || [];
+  
+      var item = {
+        Name: {{ product.title|json }},
+        ProductID: {{ product.id|json }},
+        Categories: {{ product.collections|map:'title'|json }},
+        ImageURL: "https:{{ product.featured_image.src|img_url:'grande' }}",
+        URL: "{{ shop.secure_url }}{{ product.url }}",
+        Brand: {{ product.vendor|json }},
+        Price: {{ product.price|money|json }},
+        CompareAtPrice: {{ product.compare_at_price_max|money|json }}
+      };
+  
+      _learnq.push(['track', 'Viewed Product', item]);
+      _learnq.push(['trackViewedItem', {
+        Title: item.Name,
+        ItemId: item.ProductID,
+        Categories: item.Categories,
+        ImageUrl: item.ImageURL,
+        Url: item.URL,
+        Metadata: {
+          Brand: item.Brand,
+          Price: item.Price,
+          CompareAtPrice: item.CompareAtPrice
+        }
+      }]);
+    </script>
+  
+    <!--Klaviyo cart script begin-->
+    <script type="text/javascript">
+      var _learnq = _learnq || [];
+      document.getElementById("AddToCart").addEventListener('click',function (){
+        _learnq.push(['track', 'Added to Cart', item]);
+      });
+    </script>
+  

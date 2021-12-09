@@ -1,0 +1,48 @@
+
+<section class="jca-tomo-hero">
+    {% for block in section.blocks %}
+       
+            <div class="jca-tomo-title">
+                Tomo
+            </div>
+
+            <p>
+                Move through the world at the pace of together.
+            </p>
+
+            <div class="jca-tomo-shop-now-btn">
+                <a href="#jca-product-anchor">Shop Now</a>
+            </div>
+
+        {% if block.settings.desktop-bg-image != blank and block.settings.mobile-bg-image != blank %}
+            <div class="bg-holder">
+                <img 
+                    id="theDesktopTomoBG" 
+                    class="jca-slide-bg" 
+                    src="{{ block.settings.desktop-bg-image | img_url: 'original' }}"
+                >
+                <img 
+                    id="theMobileTomoBG" 
+                    class="jca-slide-bg" 
+                    src="{{ block.settings.mobile-bg-image | img_url: 'original' }}"
+                >
+            </div>
+        {% endif %}
+    {% endfor %}
+</section>
+
+
+{% schema %}
+  {
+    "name": "Section name",
+    "settings": [
+
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
